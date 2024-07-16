@@ -1,16 +1,15 @@
 from mlvp import Bundle
 
-class DupPCBundle(Bundle):
-    signals = ["pc_0", "pc_1", "pc_2", "pc_3"]
+class DupBundle(Bundle):
+    signals = ["0", "1", "2", "3"]
 
 class PCBundle(Bundle):
 
     def __init__(self):
         super().__init__()
-
-        self.in_pc_s0 = DupPCBundle.from_prefix("io_in_bits_s0_")
-        self.out_pc_s2 = DupPCBundle.from_prefix("io_out_s2_")
-        self.out_pc_s3 = DupPCBundle.from_prefix("io_out_s3_")
+        self.in_s0_pc = DupBundle.from_prefix("io_in_bits_s0_pc_")
+        self.out_s2_pc = DupBundle.from_prefix("io_out_s2_pc_")
+        self.out_s3_pc = DupBundle.from_prefix("io_out_s3_pc_")
 
 class FullPredictBundle(Bundle):
     signals = [
@@ -100,26 +99,18 @@ class RedirectBundle(Bundle):
         "NOS_value",
     ]
 
-class ControlBundle(Bundle):
-    signals = [
-        "reset",
-        "io_reset_vector",
-        "io_s3_redirect_2",
-        "io_ctrl_ras_enable",
-        "io_s0_fire_0",
-        "io_s0_fire_1",
-        "io_s0_fire_2",
-        "io_s0_fire_3",
-        "io_s1_fire_0",
-        "io_s1_fire_1",
-        "io_s1_fire_2",
-        "io_s1_fire_3",
-        "io_s2_fire_0",
-        "io_s2_fire_1",
-        "io_s2_fire_2",
-        "io_s2_fire_3",
-        "io_s3_fire_2",
-    ]
+class PipeCtrlBundle(Bundle):
+    def __init__(self):
+        super().__init__()
+
+        self.s0_fire = DupBundle.from_prefix("io_s0_fire_")
+        self.s1_fire = DupBundle.from_prefix("io_s1_fire_")
+        self.s2_fire = DupBundle.from_prefix("io_s2_fire_")
+        self.s3_fire = DupBundle.from_prefix("io_s3_fire_")
+        self.s3_redirect = DupBundle.from_prefix("io_s3_redirect_")
+
+
+
 
 class RASInBundle(Bundle):
     def __init__(self):
@@ -152,13 +143,14 @@ class RASOutBundle(Bundle):
         self.out_last_stage_ftb = FTBBundle.from_prefix("last_stage_ftb_entry_")
         self.out_last_stage_spec = SpecInfoBundle.from_prefix("last_stage_spec_info_")
 
-
 class RASBundle(Bundle):
+    signals = ["reset", "io_reset_vector", "io_ctrl_ras_enable"]
+
     def __init__(self):
         super().__init__()
 
         self.pc = PCBundle()
-        self.control = ControlBundle()
+        self.control = PipeCtrlBundle()
 
         self.resp_in = RASInBundle.from_prefix("io_in_bits_resp_in_0_")
         self.out = RASOutBundle.from_prefix("io_out_")
