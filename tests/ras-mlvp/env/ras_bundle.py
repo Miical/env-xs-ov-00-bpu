@@ -1,15 +1,15 @@
 from mlvp import Bundle
 
 class DupBundle(Bundle):
-    signals = ["0", "1", "2", "3"]
+    signals = ["_0", "_1", "_2", "_3"]
 
 class PCBundle(Bundle):
 
     def __init__(self):
         super().__init__()
-        self.in_s0_pc = DupBundle.from_prefix("io_in_bits_s0_pc_")
-        self.out_s2_pc = DupBundle.from_prefix("io_out_s2_pc_")
-        self.out_s3_pc = DupBundle.from_prefix("io_out_s3_pc_")
+        self.in_s0_pc = DupBundle.from_prefix("io_in_bits_s0_pc")
+        self.out_s2_pc = DupBundle.from_prefix("io_out_s2_pc")
+        self.out_s3_pc = DupBundle.from_prefix("io_out_s3_pc")
 
 class FullPredictBundle(Bundle):
     signals = [
@@ -103,11 +103,11 @@ class PipeCtrlBundle(Bundle):
     def __init__(self):
         super().__init__()
 
-        self.s0_fire = DupBundle.from_prefix("io_s0_fire_")
-        self.s1_fire = DupBundle.from_prefix("io_s1_fire_")
-        self.s2_fire = DupBundle.from_prefix("io_s2_fire_")
-        self.s3_fire = DupBundle.from_prefix("io_s3_fire_")
-        self.s3_redirect = DupBundle.from_prefix("io_s3_redirect_")
+        self.s0_fire = DupBundle.from_prefix("io_s0_fire")
+        self.s1_fire = DupBundle.from_prefix("io_s1_fire")
+        self.s2_fire = DupBundle.from_prefix("io_s2_fire")
+        self.s3_fire = DupBundle.from_prefix("io_s3_fire")
+        self.s3_redirect = DupBundle.from_prefix("io_s3_redirect")
 
 
 
@@ -132,16 +132,16 @@ class RASOutBundle(Bundle):
     def __init__(self):
         super().__init__()
 
-        self.out_full_pred_s2_0 = FullPredictBundle.from_prefix("s2_full_pred_0_")
-        self.out_full_pred_s2_1 = FullPredictBundle.from_prefix("s2_full_pred_1_")
-        self.out_full_pred_s2_2 = FullPredictBundle.from_prefix("s2_full_pred_2_")
-        self.out_full_pred_s2_3 = FullPredictBundle.from_prefix("s2_full_pred_3_")
-        self.out_full_pred_s3_0 = FullPredictBundle.from_prefix("s3_full_pred_0_")
-        self.out_full_pred_s3_1 = FullPredictBundle.from_prefix("s3_full_pred_1_")
-        self.out_full_pred_s3_2 = FullPredictBundle.from_prefix("s3_full_pred_2_")
-        self.out_full_pred_s3_3 = FullPredictBundle.from_prefix("s3_full_pred_3_")
-        self.out_last_stage_ftb = FTBBundle.from_prefix("last_stage_ftb_entry_")
-        self.out_last_stage_spec = SpecInfoBundle.from_prefix("last_stage_spec_info_")
+        self.full_pred_s2_0 = FullPredictBundle.from_prefix("s2_full_pred_0_")
+        self.full_pred_s2_1 = FullPredictBundle.from_prefix("s2_full_pred_1_")
+        self.full_pred_s2_2 = FullPredictBundle.from_prefix("s2_full_pred_2_")
+        self.full_pred_s2_3 = FullPredictBundle.from_prefix("s2_full_pred_3_")
+        self.full_pred_s3_0 = FullPredictBundle.from_prefix("s3_full_pred_0_")
+        self.full_pred_s3_1 = FullPredictBundle.from_prefix("s3_full_pred_1_")
+        self.full_pred_s3_2 = FullPredictBundle.from_prefix("s3_full_pred_2_")
+        self.full_pred_s3_3 = FullPredictBundle.from_prefix("s3_full_pred_3_")
+        self.last_stage_ftb = FTBBundle.from_prefix("last_stage_ftb_entry_")
+        self.last_stage_spec = SpecInfoBundle.from_prefix("last_stage_spec_info_")
 
 class RASBundle(Bundle):
     signals = ["reset", "io_reset_vector", "io_ctrl_ras_enable"]

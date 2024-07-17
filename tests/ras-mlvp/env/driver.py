@@ -1,7 +1,7 @@
-from transaction import *
-from ras_bundle import *
 from mlvp import Component, Port
 from random import random, randint
+from .transaction import *
+from .ras_bundle import *
 
 class FullPredictDriver(Component):
     def __init__(self, bundle):
@@ -46,13 +46,14 @@ class PipeCtrlDriver(Component):
         while True:
             req = await self.port.get()
 
-            fire = req["fire"]
-            redirect = req["redirect"]
+            if req is not None:
+                fire = req["fire"]
+                redirect = req["redirect"]
 
-            self.bundle.s0_fire.set_all(fire[0])
-            self.bundle.s1_fire.set_all(fire[1])
-            self.bundle.s2_fire.set_all(fire[2])
-            self.bundle.s3_fire.set_all(fire[3])
-            self.bundle.s3_redirect.set_all(redirect[2])
+                self.bundle.s0_fire.set_all(fire[0])
+                self.bundle.s1_fire.set_all(fire[1])
+                self.bundle.s2_fire.set_all(fire[2])
+                self.bundle.s3_fire.set_all(fire[3])
+                self.bundle.s3_redirect.set_all(redirect[1])
 
             await self.bundle.step()
