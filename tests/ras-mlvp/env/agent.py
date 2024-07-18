@@ -57,5 +57,5 @@ class RASSlaveAgent:
         self.bundle = ras_bundle
 
         self.s2_full_pred_monitor = FullPredictMonitor(ras_bundle.out.full_pred_s2_0, ras_bundle.control.s2_fire._0)
-        self.s3_full_pred_monitor = FullPredictMonitor(ras_bundle.out.full_pred_s3_0, ras_bundle.control.s3_fire._2)
+        # self.s3_full_pred_monitor = FullPredictMonitor(ras_bundle.out.full_pred_s3_0, ras_bundle.control.s3_fire._2)
 

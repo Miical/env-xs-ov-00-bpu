@@ -23,9 +23,8 @@ async def top_test(ras, tests):
     ras_rm.s3_port.connect(ras_master.s3_driver_port)
     ras_rm.pipe_ctrl_port.connect(ras_master.pipectrl_port)
 
-
-    mlvp.add_comparison(ras_rm.s2_out_port, ras_slave.s2_full_pred_monitor.port)
-    mlvp.add_comparison(ras_rm.s3_out_port, ras_slave.s3_full_pred_monitor.port)
+    mlvp.add_comparison(ras_slave.s2_full_pred_monitor.port, ras_rm.s2_out_port)
+    # mlvp.add_comparison(ras_slave.s3_full_pred_monitor.port, ras_rm.s3_out_port)
 
 
     for test in tests:

@@ -32,7 +32,6 @@ class FullPredictDriver(Component):
             self.bundle.is_br_sharing.value = req.second_slot.is_br_sharing
             self.bundle.hit.value = req.hit
 
-            await self.bundle.step()
 
 
 class PipeCtrlDriver(Component):
