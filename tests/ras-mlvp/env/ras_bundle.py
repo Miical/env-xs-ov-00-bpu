@@ -100,6 +100,8 @@ class RedirectBundle(Bundle):
     ]
 
 class PipeCtrlBundle(Bundle):
+    signals = ["reset", "io_reset_vector", "io_ctrl_ras_enable"]
+
     def __init__(self):
         super().__init__()
 
@@ -144,8 +146,6 @@ class RASOutBundle(Bundle):
         self.last_stage_spec = SpecInfoBundle.from_prefix("last_stage_spec_info_")
 
 class RASBundle(Bundle):
-    signals = ["reset", "io_reset_vector", "io_ctrl_ras_enable"]
-
     def __init__(self):
         super().__init__()
 

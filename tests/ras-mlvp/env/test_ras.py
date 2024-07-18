@@ -12,7 +12,7 @@ async def top_test(ras, tests):
     mlvp.create_task(mlvp.start_clock(ras))
 
     ras_bundle = RASBundle().set_name("ras").bind(ras)
-    ras_bundle.set_write_mode_as_imme().set_all(0)
+    ras_bundle.set_all(0)
     # print(Bundle.detect_unconnected_signals(ras))
 
     ras_master = RASMasterAgent(ras_bundle)

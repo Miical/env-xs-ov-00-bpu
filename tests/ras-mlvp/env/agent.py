@@ -38,12 +38,17 @@ class RASMasterAgent:
         self.update_driver = None
         self.redirect_driver = None
 
+
     async def pipeline_ctrl(self, s0_fire, s1_fire, s2_fire, s3_fire,
-                            s2_redirect, s3_redirect):
+                            s2_redirect, s3_redirect, *, reset=False):
         await self.pipectrl_port.put({
             "fire": [s0_fire, s1_fire, s2_fire, s3_fire],
-            "redirect": [s2_redirect, s3_redirect]
+            "redirect": [s2_redirect, s3_redirect],
+            "reset": reset
         })
+
+    async def reset(self):
+        await self.pipeline_ctrl(0, 0, 0, 0, 0, 0, reset=True)
 
     async def put_s2(self, fullpreditem: FullPredictItem):
         await self.s2_driver_port.put(fullpreditem)
@@ -57,5 +62,5 @@ class RASSlaveAgent:
         self.bundle = ras_bundle
 
         self.s2_full_pred_monitor = FullPredictMonitor(ras_bundle.out.full_pred_s2_0, ras_bundle.control.s2_fire._0)
-        # self.s3_full_pred_monitor = FullPredictMonitor(ras_bundle.out.full_pred_s3_0, ras_bundle.control.s3_fire._2)
+        self.s3_full_pred_monitor = FullPredictMonitor(ras_bundle.out.full_pred_s3_0, ras_bundle.control.s3_fire._2)
 

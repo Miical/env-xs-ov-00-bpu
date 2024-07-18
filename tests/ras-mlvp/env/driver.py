@@ -48,11 +48,19 @@ class PipeCtrlDriver(Component):
             if req is not None:
                 fire = req["fire"]
                 redirect = req["redirect"]
+                reset = req["reset"]
 
-                self.bundle.s0_fire.set_all(fire[0])
-                self.bundle.s1_fire.set_all(fire[1])
-                self.bundle.s2_fire.set_all(fire[2])
-                self.bundle.s3_fire.set_all(fire[3])
-                self.bundle.s3_redirect.set_all(redirect[1])
+                if reset:
+                    self.bundle.set_all(0)
+                    self.bundle.reset.value = 1
+                    await self.bundle.step()
+                    self.bundle.reset.value = 0
+                else:
+                    self.bundle.s0_fire.set_all(fire[0])
+                    self.bundle.s1_fire.set_all(fire[1])
+                    self.bundle.s2_fire.set_all(fire[2])
+                    self.bundle.s3_fire.set_all(fire[3])
+                    self.bundle.s3_redirect.set_all(redirect[1])
+                self.bundle.io_ctrl_ras_enable.value = 1
 
             await self.bundle.step()
