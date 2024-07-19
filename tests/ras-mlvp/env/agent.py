@@ -56,6 +56,18 @@ class RASMasterAgent:
     async def put_s3(self, fullpreditem: FullPredictItem):
         await self.s3_driver_port.put(fullpreditem)
 
+    async def exec_once(self, s2_fullpred, s3_fullpred):
+        await self.pipeline_ctrl(1, 1, 1, 1, 0, 0)
+        await self.put_s2(s2_fullpred)
+        await self.put_s3(s3_fullpred)
+
+    async def nochange_exec(self, fullpred):
+        await self.pipeline_ctrl(1, 1, 1, 0, 0, 0)
+        await self.put_s2(fullpred)
+        await self.pipeline_ctrl(1, 1, 0, 1, 0, 0)
+        await self.put_s3(fullpred)
+
+
 
 class RASSlaveAgent:
     def __init__(self, ras_bundle: RASOutBundle):

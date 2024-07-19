@@ -32,8 +32,6 @@ class FullPredictMonitor(Component):
                 item.fall_through_err = self.bundle.fallThroughErr.value
                 item.hit = self.bundle.hit.value
 
-                print(f"FullPredictMonitor: {hex(item.fall_through_addr)}")
-
                 await self.port.put(item)
 
             await self.bundle.step()

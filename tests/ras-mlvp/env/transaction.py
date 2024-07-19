@@ -73,7 +73,7 @@ class FullPredictItem:
     def will_jump(self):
         """This predict Item will trigger unconditional jump instructions in SecondSlot."""
 
-        return not self.first_slot.is_taken and self.second_slot.is_taken() and not self.second_slot.is_br_sharing
+        return not self.first_slot.is_taken() and self.second_slot.is_taken() and not self.second_slot.is_br_sharing and self.hit
 
     def call_taken(self):
         """This predict Item will trigger a call instruction."""
