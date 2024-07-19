@@ -111,9 +111,6 @@ class PipeCtrlBundle(Bundle):
         self.s3_fire = DupBundle.from_prefix("io_s3_fire")
         self.s3_redirect = DupBundle.from_prefix("io_s3_redirect")
 
-
-
-
 class RASInBundle(Bundle):
     def __init__(self):
         super().__init__()

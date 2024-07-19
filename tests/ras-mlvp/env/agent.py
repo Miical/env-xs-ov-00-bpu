@@ -1,4 +1,5 @@
 import mlvp
+from mlvp import Port
 from .driver import *
 from .monitor import *
 
@@ -33,11 +34,6 @@ class RASMasterAgent:
         self.pipectrl_port = Port()
         self.pipectrl_port.connect(self.pipectrl_driver.port)
 
-        self.last_stage_ftb_driver = None
-        self.pc_driver = None
-        self.update_driver = None
-        self.redirect_driver = None
-
 
     async def pipeline_ctrl(self, s0_fire, s1_fire, s2_fire, s3_fire,
                             s2_redirect, s3_redirect, *, reset=False):
@@ -66,7 +62,6 @@ class RASMasterAgent:
         await self.put_s2(fullpred)
         await self.pipeline_ctrl(1, 1, 0, 1, 0, 0)
         await self.put_s3(fullpred)
-
 
 
 class RASSlaveAgent:
