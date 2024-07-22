@@ -1,4 +1,5 @@
 import mlvp
+from ras_bundle import FullPredictBundle
 
 def comp_with_none(a, b):
     if a is None or b is None:
@@ -99,3 +100,44 @@ class FullPredictItem:
                comp_with_none(self.fall_through_err, other.fall_through_err) and \
                self.first_slot == other.first_slot and \
                self.second_slot == other.second_slot
+
+    def __bundle_assign__(self, bundle: FullPredictBundle):
+        bundle.br_taken_mask_0.value = self.first_slot.taken
+        bundle.slot_valids_0.value = self.first_slot.valid
+        bundle.targets_0.value = self.first_slot.target
+        bundle.offsets_0.value = self.first_slot.offset
+        bundle.br_taken_mask_1.value = self.second_slot.taken
+        bundle.slot_valids_1.value = self.second_slot.valid
+        bundle.targets_1.value = self.second_slot.target
+        bundle.offsets_1.value = self.second_slot.offset
+        bundle.jalr_target.value = self.second_slot.jalr_target
+        bundle.fallThroughAddr.value = self.fall_through_addr
+        bundle.fallThroughErr.value = self.fall_through_err
+        bundle.last_may_be_rvi_call.value = self.second_slot.rvi_call
+        bundle.is_jalr.value = self.second_slot.is_jalr
+        bundle.is_call.value = self.second_slot.is_call
+        bundle.is_ret.value = self.second_slot.is_ret
+        bundle.is_br_sharing.value = self.second_slot.is_br_sharing
+        bundle.hit.value = self.hit
+
+    @classmethod
+    def from_bundle(cls, bundle: FullPredictBundle):
+        item = cls()
+        item.first_slot.valid = bundle.slot_valids_0.value
+        item.first_slot.offset = bundle.offsets_0.value
+        item.first_slot.target = bundle.targets_0.value
+        item.first_slot.taken = bundle.br_taken_mask_0.value
+        item.second_slot.valid = bundle.slot_valids_1.value
+        item.second_slot.offset = bundle.offsets_1.value
+        item.second_slot.target = bundle.targets_1.value
+        item.second_slot.taken = bundle.br_taken_mask_1.value
+        item.second_slot.jalr_target = bundle.jalr_target.value
+        item.fall_through_addr = bundle.fallThroughAddr.value
+        item.fall_through_err = bundle.fallThroughErr.value
+        item.second_slot.rvi_call = bundle.last_may_be_rvi_call.value
+        item.second_slot.is_jalr = bundle.is_jalr.value
+        item.second_slot.is_call = bundle.is_call.value
+        item.second_slot.is_ret = bundle.is_ret.value
+        item.second_slot.is_br_sharing = bundle.is_br_sharing.value
+        item.hit = bundle.hit.value
+        return item
