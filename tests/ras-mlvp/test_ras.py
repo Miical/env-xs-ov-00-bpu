@@ -1,6 +1,8 @@
 import mlvp
 import sys
 from ras_bundle import *
+from generator import FullPredGenerator
+from model import *
 from env import *
 
 sys.path.append('../../out/picker_out_RAS')
@@ -9,14 +11,23 @@ from UT_RAS import DUTRAS
 async def top_test(ras):
     mlvp.create_task(mlvp.start_clock(ras))
 
+
     ras_bundle = RASBundle().set_name("ras").bind(ras)
     ras_bundle.set_all(0)
     # print(Bundle.detect_unconnected_signals(ras))
 
     env = DUTEnv(ras_bundle)
-    await env.put_s2(FullPredictItem())
-    await env.put_s2(FullPredictItem())
-    await env.drive_completed()
+    model = RASModel()
+    env.attach(model)
+
+    gen = FullPredGenerator()
+
+    await env.put_s2(gen.random_item())
+    print(await env.drive_completed())
+    await env.put_s2(gen.random_item())
+    print(await env.drive_completed())
+
+    await ras_bundle.step(2)
 
 
 

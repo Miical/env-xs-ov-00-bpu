@@ -16,16 +16,15 @@ class DUTEnv(Env):
         self.out_s2 = bundle.out.full_pred_s2_3
         self.s2_fire = bundle.control.s2_fire
 
-    @driver_method(model_sync=False, imme_ret=False)
+    @driver_method()
     async def put_s2(self, fullpred: FullPredictItem):
         self.in_s2.assign(fullpred)
         print("assign done")
         await self.bundle.step()
+        return fullpred
 
-    @monitor_method(model_compare=False, keep_monitor=True)
+    @monitor_method()
     async def monitor_s2(self):
-        if self.s2_fire._0.value:
-            return FullPredictItem.from_bundle(self.out_s2)
-
+        return FullPredictItem.from_bundle(self.out_s2)
 
 
