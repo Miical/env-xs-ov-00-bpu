@@ -22,15 +22,13 @@ async def top_test(ras):
 
     gen = FullPredGenerator()
 
-    await env.put_s2(gen.random_item())
-    print(await env.drive_completed())
-    await env.put_s2(gen.random_item())
-    print(await env.drive_completed())
+    await env.reset(10)
 
-    await ras_bundle.step(2)
+    for i in range(1000):
+        await env.s2_s3_same(gen.random_call())
+        await env.s2_s3_same(gen.random_ret())
 
-
-
+    await ras_bundle.step(1)
 
 
 
