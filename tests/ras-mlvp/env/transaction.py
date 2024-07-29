@@ -1,5 +1,5 @@
 import mlvp
-from ras_bundle import FullPredictBundle
+from .ras_bundle import FullPredictBundle
 
 def comp_with_none(a, b):
     if a is None or b is None:

@@ -1,0 +1,1 @@
+SPEC_MAX_SIZE = 32

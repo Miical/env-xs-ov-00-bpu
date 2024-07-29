@@ -1,7 +1,6 @@
-import mlvp
 import copy
 from mlvp import Model, DriverMethod, MonitorMethod, Component
-from transaction import FullPredictItem
+from .transaction import FullPredictItem
 
 class RASStack:
     def __init__(self):
@@ -38,7 +37,7 @@ class RASModel(Model):
             s2_full_pred.second_slot.target = s2_full_pred.second_slot.jalr_target
         return s2_full_pred
 
-    def reset(self, step):
+    def reset(self, step=None):
         self.stack.clear()
 
     async def main(self):

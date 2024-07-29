@@ -1,13 +1,8 @@
-import mlvp
-import functools
-from transaction import *
-from ras_bundle import *
+from .transaction import *
+from .ras_bundle import *
 from mlvp import Env, driver_method, monitor_method
 
-
-
-
-class DUTEnv(Env):
+class RASEnv(Env):
     def __init__(self, bundle: RASBundle):
         super().__init__(monitor_step=bundle.step)
 
@@ -19,7 +14,9 @@ class DUTEnv(Env):
 
     @driver_method(match_func=True, imme_ret=False)
     async def reset(self, step=1):
+        self.bundle.set_all(0)
         self.bundle.control.reset.value = 1
+        self.bundle.control.io_ctrl_ras_enable.value = 1
         await self.bundle.step(step)
         self.bundle.control.reset.value = 0
 
@@ -66,5 +63,3 @@ class DUTEnv(Env):
         await self.pipeline_ctrl(0, 0, 0, 1, 0, 0)
         await self.put_s3(fullpred)
         await self.drive_completed()
-
-

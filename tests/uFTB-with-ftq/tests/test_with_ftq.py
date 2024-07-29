@@ -68,7 +68,7 @@ def test_uftb(request):
 
     # Run the test
     mlvp.setup_logging(log_level=logging.INFO, log_file="report/uftb_with_ftq.log")
-    mlvp.run(uftb_test(uFTB))
+    mlvp.run(uftb_test(uFTB), uFTB)
     uFTB.finalize()
 
     pred_stat.summary()
