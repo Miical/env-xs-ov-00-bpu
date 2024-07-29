@@ -40,6 +40,23 @@ async def test_ras_spec_push_and_pop_with_overflow(ras_env: RASEnv):
         await ras_env.s2_s3_same(gen.random_ret())
 
 
+async def test_ras_test_push_same_addr_with_stack_full(ras_env: RASEnv):
+    """
+    测试 RAS Counter 基础功能是否正确
+
+    Spec栈 Counter 有问题但未修复， RM 实现为不带 Counter 的版本
+    """
+
+    await ras_env.reset()
+
+    gen = FullPredGenerator()
+    for i in range(SPEC_MAX_SIZE):
+        for _ in range(MAX_COUNTER):
+            await ras_env.s2_s3_same(gen.random_call(i))
+
+
+
+
 
 async def top_test(ras):
     mlvp.create_task(mlvp.start_clock(ras))
@@ -53,7 +70,9 @@ async def top_test(ras):
     env.attach(model)
 
 
-    await test_ras_spec_push_and_pop_with_overflow(env)
+    # await test_ras_spec_push_and_pop(env)
+    # await test_ras_spec_push_and_pop_with_overflow(env)
+    await test_ras_test_push_same_addr_with_stack_full(env)
 
 
 

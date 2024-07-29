@@ -1,21 +1,36 @@
 import copy
 from mlvp import Model, DriverMethod, MonitorMethod, Component
+from .config import *
 from .transaction import FullPredictItem
+
+class RASPtr:
+    def __init__(self, max_size):
+        self.value = 0
+        self.max_size = max_size
+
+    def inc(self):
+        self.value = (self.value + 1) % self.max_size
+
+    def dec(self):
+        self.value = (self.value - 1) % self.max_size
+
 
 class RASStack:
     def __init__(self):
-        super().__init__()
-
-        self.stack = []
+        self.stack = [0] * SPEC_MAX_SIZE
+        self.ptr = RASPtr(SPEC_MAX_SIZE)
 
     def push(self, target):
-        self.stack.append(target)
+        self.stack[self.ptr.value] = target
+        self.ptr.inc()
 
     def pop(self):
-        return self.stack.pop()
+        self.ptr.dec()
+        return self.stack[self.ptr.value]
 
     def clear(self):
-        self.stack.clear()
+        for i in range(SPEC_MAX_SIZE):
+            self.stack[i] = 0
 
 class RASModel(Model):
     def __init__(self):
