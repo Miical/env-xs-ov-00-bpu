@@ -41,5 +41,5 @@ uftb:
 	@mkdir -p out
 	rm -rf ${TARGET} 
 	picker export ${TOP_ENTRY} --fs ${TOP_FILES} --lang ${TL} -c\
-		--tdir ${TARGET} ${_WAVEFORM}${_EXAMPLE} ${_VERBOSE}
+		--tdir ${TARGET} ${_WAVEFORM}${_EXAMPLE} ${_VERBOSE} --cp_lib
 		

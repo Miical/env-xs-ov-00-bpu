@@ -34,6 +34,9 @@ ftb:
 ras:
 	make -f ./mk/RAS.mk ras
 
+rasv2:
+	make -f ./mk/RASv2.mk ras
+
 ittage:
 	make -f ./mk/ITTAGE.mk ittage
 

@@ -1,5 +1,5 @@
-TOP_ENTRY := ./rtl/RAS/RAS.sv
-TOP_FILES := ./rtl/RAS.txt
+TOP_ENTRY := ./rtl/RASv2/RAS.v
+TOP_FILES := ./rtl/RASv2.txt
 TL ?= cpp
 
 ifneq ($(TARGET),)
@@ -39,7 +39,7 @@ ras:
 	@echo "EXAMPLE=${_EXAMPLE}"
 
 	@mkdir -p out
-	rm -rf ${TARGET} 
+	rm -rf ${TARGET}
 	picker export ${TOP_ENTRY} --fs ${TOP_FILES} --lang ${TL} -c\
 		--tdir ${TARGET} ${_WAVEFORM}${_EXAMPLE} ${_VERBOSE} --cp_lib
-		
+
