@@ -81,7 +81,7 @@ async def test_ras_spec_pop_with_one_element(ras_env: RASEnv):
     await ras_env.reset()
 
     gen = FullPredGenerator()
-    for _ in range(100):
+    for _ in range(SPEC_MAX_SIZE // 2):
         await ras_env.s2_s3_same(gen.random_call())
         await ras_env.s2_s3_same(gen.random_ret())
 
@@ -91,6 +91,13 @@ async def test_ras_commit_push_and_pop(ras_env: RASEnv):
     """
 
     await ras_env.reset()
+
+    gen = FullPredGenerator()
+
+    for _ in range(10):
+        await ras_env.s2_s3_same(gen.random_call())
+
+    await ras_env.update(UpdateItem())
 
 
 
@@ -109,11 +116,12 @@ async def top_test(ras):
     env.attach(model)
 
 
-    await test_ras_spec_push_and_pop(env)
+    # await test_ras_spec_push_and_pop(env)
     # await test_ras_spec_push_and_pop_with_overflow(env)
     # await test_ras_spec_push_and_pop_with_stack_full(env)
     # await test_ras_test_push_same_addr_with_stack_full(env)
     # await test_ras_spec_pop_with_one_element(env)
+    await test_ras_commit_push_and_pop(env)
 
 
 

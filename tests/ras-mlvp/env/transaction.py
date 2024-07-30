@@ -1,5 +1,5 @@
 import mlvp
-from .ras_bundle import FullPredictBundle
+from .ras_bundle import *
 from .config import *
 
 def comp_with_none(a, b):
@@ -173,9 +173,9 @@ class RASMeta:
     def __init__(self, ssp=None, sctr=None, tosw=None, tosr=None, nos=None):
         self.ssp = ssp
         self.sctr = sctr
-        self.tosw = tosw
-        self.tosr = tosr
-        self.nos = nos
+        self.tosw = RASPtr() if tosw is None else tosw
+        self.tosr = RASPtr() if tosr is None else tosr
+        self.nos = RASPtr() if nos is None else tosr
 
     @classmethod
     def from_int(cls, value):
@@ -204,6 +204,28 @@ class RASMeta:
 
         return meta
 
+    def to_int(self):
+        value = 0
+        start = 0
+        value |= 0 if not self.nos.value else self.nos.value << start
+        start += PTR_BITS
+        value |= 0 if not self.nos.flag else self.nos.flag << start
+        start += FLAG_BITS
+        value |= 0 if not self.tosr.value else self.tosr.value << start
+        start += PTR_BITS
+        value |= 0 if not self.tosr.flag else self.tosr.flag << start
+        start += FLAG_BITS
+        value |= 0 if not self.tosw.value else self.tosw.value << start
+        start += PTR_BITS
+        value |= 0 if not self.tosw.flag else self.tosw.flag << start
+        start += FLAG_BITS
+        value |= 0 if not self.sctr else self.sctr << start
+        start += SCTR_BITS
+        value |= 0 if not self.ssp else self.ssp << start
+        start += SSP_BITS
+
+        return value
+
     def __str__(self):
         return f"RASMeta(ssp={self.ssp}, sctr={self.sctr}, tosw={self.tosw}, tosr={self.tosr}, nos={self.nos})"
 
@@ -214,3 +236,36 @@ class RASMeta:
                self.tosr == other.tosr and \
                self.nos == other.nos
 
+
+class UpdateItem:
+    def __init__(self):
+        self.meta = RASMeta()
+        self.tailslot_offset = 0
+        self.tailslot_valid = 0
+        self.is_call = 0
+        self.is_ret = 0
+        self.cfi_idx_valid = 0
+        self.cfi_idx_bits = 0
+        self.jmp_taken = 0
+
+    def is_jmp_taken(self):
+        return self.cfi_idx_valid and self.cfi_idx_bits == self.tailSlot_offset and self.tailslot_valid and self.jmp_taken
+
+    def is_call_taken(self):
+        return self.is_jmp_taken() and self.is_call
+
+    def is_ret_taken(self):
+        return self.is_jmp_taken() and self.is_ret
+
+    def __str__(self):
+        return f"UpdateItem(meta={self.meta}, tailslot_offset={self.tailslot_offset}, tailslot_valid={self.tailslot_valid}, is_call={self.is_call}, is_ret={self.is_ret}, cfi_idx_valid={self.cfi_idx_valid}, cfi_idx_bits={self.cfi_idx_bits}, jmp_taken={self.jmp_taken})"
+
+    def __bundle_assign__(self, bundle: UpdateBundle):
+        bundle.meta.value = self.meta.to_int()
+        bundle.ftb_entry_tailSlot_offset.value = self.tailslot_offset
+        bundle.ftb_entry_tailSlot_valid.value = self.tailslot_valid
+        bundle.ftb_entry_isCall.value = self.is_call
+        bundle.ftb_entry_isRet.value = self.is_ret
+        bundle.cfi_idx_valid.value = self.cfi_idx_valid
+        bundle.cfi_idx_bits.value = self.cfi_idx_bits
+        bundle.jmp_taken.value = self.jmp_taken

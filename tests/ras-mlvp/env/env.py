@@ -45,6 +45,13 @@ class RASEnv(Env):
         self.bundle.resp_in.full_pred_s3_3.assign(fullpred)
         await self.bundle.step()
 
+    @driver_method(match_func=True, imme_ret=False)
+    async def update(self, req: UpdateItem):
+        self.bundle.update.valid.value = 1
+        self.bundle.update.assign(req)
+        await self.bundle.step()
+        self.bundle.update.valid.value = 0
+
     @monitor_method()
     async def monitor_s2(self):
         if self.s2_fire._1.value:

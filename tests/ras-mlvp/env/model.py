@@ -58,6 +58,9 @@ class RASModel(Model):
             s2_full_pred.second_slot.target = s2_full_pred.second_slot.jalr_target
         return s2_full_pred
 
+    def update(self, req):
+        print(req)
+
     def reset(self, step=None):
         self.stack.clear()
 
