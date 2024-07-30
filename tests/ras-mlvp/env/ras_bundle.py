@@ -115,15 +115,15 @@ class RASInBundle(Bundle):
     def __init__(self):
         super().__init__()
 
-        self.in_full_pred_s2_0 = FullPredictBundle.from_prefix("s2_full_pred_0_")
-        self.in_full_pred_s2_1 = FullPredictBundle.from_prefix("s2_full_pred_1_")
-        self.in_full_pred_s2_2 = FullPredictBundle.from_prefix("s2_full_pred_2_")
-        self.in_full_pred_s2_3 = FullPredictBundle.from_prefix("s2_full_pred_3_")
-        self.in_full_pred_s3_0 = FullPredictBundle.from_prefix("s3_full_pred_0_")
-        self.in_full_pred_s3_1 = FullPredictBundle.from_prefix("s3_full_pred_1_")
-        self.in_full_pred_s3_2 = FullPredictBundle.from_prefix("s3_full_pred_2_")
-        self.in_full_pred_s3_3 = FullPredictBundle.from_prefix("s3_full_pred_3_")
-        self.in_last_stage_ftb = FTBBundle.from_prefix("last_stage_ftb_entry_")
+        self.full_pred_s2_0 = FullPredictBundle.from_prefix("s2_full_pred_0_")
+        self.full_pred_s2_1 = FullPredictBundle.from_prefix("s2_full_pred_1_")
+        self.full_pred_s2_2 = FullPredictBundle.from_prefix("s2_full_pred_2_")
+        self.full_pred_s2_3 = FullPredictBundle.from_prefix("s2_full_pred_3_")
+        self.full_pred_s3_0 = FullPredictBundle.from_prefix("s3_full_pred_0_")
+        self.full_pred_s3_1 = FullPredictBundle.from_prefix("s3_full_pred_1_")
+        self.full_pred_s3_2 = FullPredictBundle.from_prefix("s3_full_pred_2_")
+        self.full_pred_s3_3 = FullPredictBundle.from_prefix("s3_full_pred_3_")
+        self.last_stage_ftb = FTBBundle.from_prefix("last_stage_ftb_entry_")
 
 class RASOutBundle(Bundle):
     signals = ["last_stage_meta"]

@@ -31,18 +31,18 @@ class RASEnv(Env):
 
     @driver_method()
     async def put_s2(self, fullpred: FullPredictItem):
-        self.bundle.resp_in.in_full_pred_s2_0.assign(fullpred)
-        self.bundle.resp_in.in_full_pred_s2_1.assign(fullpred)
-        self.bundle.resp_in.in_full_pred_s2_2.assign(fullpred)
-        self.bundle.resp_in.in_full_pred_s2_3.assign(fullpred)
+        self.bundle.resp_in.full_pred_s2_0.assign(fullpred)
+        self.bundle.resp_in.full_pred_s2_1.assign(fullpred)
+        self.bundle.resp_in.full_pred_s2_2.assign(fullpred)
+        self.bundle.resp_in.full_pred_s2_3.assign(fullpred)
         await self.bundle.step()
 
     @driver_method()
     async def put_s3(self, fullpred: FullPredictItem):
-        self.bundle.resp_in.in_full_pred_s3_0.assign(fullpred)
-        self.bundle.resp_in.in_full_pred_s3_1.assign(fullpred)
-        self.bundle.resp_in.in_full_pred_s3_2.assign(fullpred)
-        self.bundle.resp_in.in_full_pred_s3_3.assign(fullpred)
+        self.bundle.resp_in.full_pred_s3_0.assign(fullpred)
+        self.bundle.resp_in.full_pred_s3_1.assign(fullpred)
+        self.bundle.resp_in.full_pred_s3_2.assign(fullpred)
+        self.bundle.resp_in.full_pred_s3_3.assign(fullpred)
         await self.bundle.step()
 
     @monitor_method()
@@ -54,6 +54,11 @@ class RASEnv(Env):
     async def monitor_s3(self):
         if self.bundle.control.s3_fire._2.value:
             return FullPredictItem.from_bundle(self.bundle.out.full_pred_s3_3)
+
+    @monitor_method()
+    async def monitor_meta(self):
+        if self.bundle.control.s3_fire._2.value:
+            return RASMeta.from_int(self.bundle.out.last_stage_meta.value)
 
     async def s2_s3_same(self, fullpred: FullPredictItem):
         await self.pipeline_ctrl(0, 0, 1, 0, 0, 0)

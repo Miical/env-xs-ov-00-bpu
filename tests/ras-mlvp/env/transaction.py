@@ -1,5 +1,6 @@
 import mlvp
 from .ras_bundle import FullPredictBundle
+from .config import *
 
 def comp_with_none(a, b):
     if a is None or b is None:
@@ -141,3 +142,75 @@ class FullPredictItem:
         item.second_slot.is_br_sharing = bundle.is_br_sharing.value
         item.hit = bundle.hit.value
         return item
+
+
+
+class RASPtr:
+    def __init__(self, value=0, flag=None):
+        self.value = value
+        self.flag = flag
+        self.max_size = SPEC_MAX_SIZE
+
+    def inc(self):
+        self.value = (self.value + 1) % self.max_size
+
+    def dec(self):
+        self.value = (self.value - 1) % self.max_size
+
+    def __str__(self):
+        return f"RASPtr(value={self.value}, flag={self.flag})"
+
+    def __eq__(self, other: "RASPtr"):
+        return comp_with_none(self.value, other.value) and \
+               comp_with_none(self.flag, other.flag)
+
+
+
+def get_bits(value, end, start):
+    return (value >> start) & ((1 << (end - start + 1)) - 1)
+
+class RASMeta:
+    def __init__(self, ssp=None, sctr=None, tosw=None, tosr=None, nos=None):
+        self.ssp = ssp
+        self.sctr = sctr
+        self.tosw = tosw
+        self.tosr = tosr
+        self.nos = nos
+
+    @classmethod
+    def from_int(cls, value):
+        meta = cls()
+        meta.tosw = RASPtr()
+        meta.tosr = RASPtr()
+        meta.nos = RASPtr()
+
+        start = 0
+        meta.nos.value = get_bits(value, start + PTR_BITS - 1, start)
+        start += PTR_BITS
+        meta.nos.flag = get_bits(value, start + FLAG_BITS - 1, start)
+        start += FLAG_BITS
+        meta.tosr.value = get_bits(value, start + PTR_BITS - 1, start)
+        start += PTR_BITS
+        meta.tosr.flag = get_bits(value, start + FLAG_BITS - 1, start)
+        start += FLAG_BITS
+        meta.tosw.value = get_bits(value, start + PTR_BITS - 1, start)
+        start += PTR_BITS
+        meta.tosw.flag = get_bits(value, start + FLAG_BITS - 1, start)
+        start += FLAG_BITS
+        meta.sctr = get_bits(value, start + SCTR_BITS - 1, start)
+        start += SCTR_BITS
+        meta.ssp = get_bits(value, start + SSP_BITS - 1, start)
+        start += SSP_BITS
+
+        return meta
+
+    def __str__(self):
+        return f"RASMeta(ssp={self.ssp}, sctr={self.sctr}, tosw={self.tosw}, tosr={self.tosr}, nos={self.nos})"
+
+    def __eq__(self, other: "RASMeta"):
+        return comp_with_none(self.ssp, other.ssp) and \
+               comp_with_none(self.sctr, other.sctr) and \
+               self.tosw == other.tosw and \
+               self.tosr == other.tosr and \
+               self.nos == other.nos
+
