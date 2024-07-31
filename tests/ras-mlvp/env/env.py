@@ -45,7 +45,7 @@ class RASEnv(Env):
         self.bundle.resp_in.full_pred_s3_3.assign(fullpred)
         await self.bundle.step()
 
-    @driver_method(match_func=True, imme_ret=False)
+    @driver_method(match_func=True)
     async def update(self, req: UpdateItem):
         self.bundle.update.valid.value = 1
         self.bundle.update.assign(req)
@@ -67,6 +67,11 @@ class RASEnv(Env):
         if self.bundle.control.s3_fire._2.value:
             return RASMeta.from_int(self.bundle.out.last_stage_meta.value)
 
+    async def single_update(self, req: UpdateItem):
+        await self.update(req)
+        await self.pipeline_ctrl(0, 0, 0, 0, 0, 0)
+        await self.drive_completed()
+
     async def s2_s3_same(self, fullpred: FullPredictItem):
         await self.pipeline_ctrl(0, 0, 1, 0, 0, 0)
         await self.put_s2(fullpred)
@@ -75,3 +80,5 @@ class RASEnv(Env):
         await self.pipeline_ctrl(0, 0, 0, 1, 0, 0)
         await self.put_s3(fullpred)
         await self.drive_completed()
+
+        return await self.monitor_meta()

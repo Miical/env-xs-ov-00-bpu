@@ -87,21 +87,21 @@ async def test_ras_spec_pop_with_one_element(ras_env: RASEnv):
 
 async def test_ras_commit_push_and_pop(ras_env: RASEnv):
     """
-    测试 RAS Commit 栈的基本出入栈功能
+    测试 RAS Commit 栈 Push 功能是否正常
     """
 
     await ras_env.reset()
 
     gen = FullPredGenerator()
 
-    for _ in range(10):
-        await ras_env.s2_s3_same(gen.random_call())
+    predict_info = []
+    for _ in range(8):
+        fullpred = gen.random_call()
+        meta = await ras_env.s2_s3_same(fullpred)
+        predict_info.append((fullpred, meta))
 
-    await ras_env.update(UpdateItem())
-
-
-
-
+    for i in range(8):
+        await ras_env.single_update(UpdateItem.from_predict_info(fullpred=predict_info[i][0], meta=predict_info[i][1]))
 
 
 async def top_test(ras):

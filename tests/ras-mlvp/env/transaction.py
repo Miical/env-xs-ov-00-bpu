@@ -146,10 +146,10 @@ class FullPredictItem:
 
 
 class RASPtr:
-    def __init__(self, value=0, flag=None):
+    def __init__(self, value=0, max_size=SPEC_MAX_SIZE, flag=None):
         self.value = value
         self.flag = flag
-        self.max_size = SPEC_MAX_SIZE
+        self.max_size = max_size
 
     def inc(self):
         self.value = (self.value + 1) % self.max_size
@@ -249,7 +249,7 @@ class UpdateItem:
         self.jmp_taken = 0
 
     def is_jmp_taken(self):
-        return self.cfi_idx_valid and self.cfi_idx_bits == self.tailSlot_offset and self.tailslot_valid and self.jmp_taken
+        return self.cfi_idx_valid and self.cfi_idx_bits == self.tailslot_offset and self.tailslot_valid and self.jmp_taken
 
     def is_call_taken(self):
         return self.is_jmp_taken() and self.is_call
@@ -269,3 +269,16 @@ class UpdateItem:
         bundle.cfi_idx_valid.value = self.cfi_idx_valid
         bundle.cfi_idx_bits.value = self.cfi_idx_bits
         bundle.jmp_taken.value = self.jmp_taken
+
+    @classmethod
+    def from_predict_info(cls, meta: RASMeta, fullpred: FullPredictItem):
+        req = cls()
+        req.meta = meta
+        req.tailslot_offset = fullpred.second_slot.offset
+        req.tailslot_valid = fullpred.second_slot.valid
+        req.is_call = fullpred.second_slot.is_call
+        req.is_ret = fullpred.second_slot.is_ret
+        req.cfi_idx_valid = True
+        req.cfi_idx_bits = fullpred.second_slot.offset
+        req.jmp_taken = fullpred.will_jump()
+        return req
