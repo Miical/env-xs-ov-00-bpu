@@ -42,6 +42,8 @@ async def test_ras_spec_push_and_pop_with_overflow(ras_env: RASEnv):
 async def test_ras_spec_push_and_pop_with_stack_full(ras_env: RASEnv):
     """
     测试 RAS Spec 栈在压入相同地址栈满的情况下是否可以正常出栈
+
+    BUG Counter 更新逻辑错误，ssp指针对应不上
     """
 
     await ras_env.reset()

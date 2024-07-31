@@ -8,25 +8,27 @@ class RASSpecStack:
         self.stack = [0] * SPEC_MAX_SIZE
         self.nos = [0] * SPEC_MAX_SIZE    # index of the previous element
 
-        self.ssp = 0
-        self.bos = RASPtr()  # bottom of stack
-        self.tosr = RASPtr() # top of stack
-        self.tosw = RASPtr() # memory allocation
+        self.ssp = RASPtr(max_size=COMMIT_MAX_SIZE) # commit stack pointer
+        self.bos = RASPtr()                         # bottom of stack
+        self.tosr = RASPtr()                        # top of stack
+        self.tosw = RASPtr()                        # memory allocation
 
     def push(self, target):
-        self.ssp += 1
+        if self.stack[self.tosr.value] != target:
+            self.ssp.inc()
         self.nos[self.tosw.value] = self.tosr.value
         self.tosr.value = self.tosw.value
         self.tosw.inc()
         self.stack[self.tosr.value] = target
 
     def pop(self):
+        self.ssp.dec()
         value = self.stack[self.tosr.value]
         self.tosr.value = self.nos[self.tosr.value]
         return value
 
     def clear(self):
-        self.ssp = 0
+        self.ssp.value = 0
         self.tosr.value = 31
         self.tosr.flag = None
         self.tosw.value = 0
@@ -124,7 +126,7 @@ class RASModel(Model):
                 s2_meta = RASMeta()
                 s2_meta.tosw = copy.deepcopy(self.stack.spec.tosw)
                 s2_meta.tosr = copy.deepcopy(self.stack.spec.tosr)
-                s2_meta.ssp = self.stack.spec.ssp
+                s2_meta.ssp = self.stack.spec.ssp.value
                 s2_meta.nos = RASPtr(None)
 
                 s2_full_pred = await self.put_s2()
