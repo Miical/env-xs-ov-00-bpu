@@ -1,8 +1,8 @@
 from .transaction import *
 from .ras_bundle import *
-from mlvp import Env, driver_method, monitor_method
+from mlvp import Agent, driver_method, monitor_method, Executor
 
-class RASEnv(Env):
+class RASAgent(Agent):
     def __init__(self, bundle: RASBundle):
         super().__init__(monitor_step=bundle.step)
 
@@ -12,7 +12,7 @@ class RASEnv(Env):
         bundle.control.io_ctrl_ras_enable.value = 1
 
 
-    @driver_method(match_func=True, imme_ret=False)
+    @driver_method(match_func=True)
     async def reset(self, step=1):
         self.bundle.set_all(0)
         self.bundle.control.reset.value = 1
@@ -68,17 +68,21 @@ class RASEnv(Env):
             return RASMeta.from_int(self.bundle.out.last_stage_meta.value)
 
     async def single_update(self, req: UpdateItem):
-        await self.update(req)
-        await self.pipeline_ctrl(0, 0, 0, 0, 0, 0)
-        await self.drive_completed()
+        async with Executor() as exec:
+            exec(self.update(req))
+            exec(self.pipeline_ctrl(0, 0, 0, 0, 0, 0))
 
     async def s2_s3_same(self, fullpred: FullPredictItem):
-        await self.pipeline_ctrl(0, 0, 1, 0, 0, 0)
-        await self.put_s2(fullpred)
-        await self.drive_completed()
+        async def hello(a, b=1):
+            print(a, b)
 
-        await self.pipeline_ctrl(0, 0, 0, 1, 0, 0)
-        await self.put_s3(fullpred)
-        await self.drive_completed()
+        async with Executor() as exec:
+            exec(self.pipeline_ctrl(0, 0, 1, 0, 0, 0))
+            exec(self.put_s2(fullpred))
+            # exec((hello(1, b=2), 5))
+
+        async with Executor() as exec:
+            exec(self.pipeline_ctrl(0, 0, 0, 1, 0, 0))
+            exec(self.put_s3(fullpred))
 
         return await self.monitor_meta()
