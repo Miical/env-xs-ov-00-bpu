@@ -73,13 +73,9 @@ class RASAgent(Agent):
             exec(self.pipeline_ctrl(0, 0, 0, 0, 0, 0))
 
     async def s2_s3_same(self, fullpred: FullPredictItem):
-        async def hello(a, b=1):
-            print(a, b)
-
         async with Executor() as exec:
             exec(self.pipeline_ctrl(0, 0, 1, 0, 0, 0))
             exec(self.put_s2(fullpred))
-            # exec((hello(1, b=2), 5))
 
         async with Executor() as exec:
             exec(self.pipeline_ctrl(0, 0, 0, 1, 0, 0))

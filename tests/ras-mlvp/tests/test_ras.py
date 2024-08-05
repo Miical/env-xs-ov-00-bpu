@@ -130,7 +130,7 @@ async def top_test(ras):
 if __name__ == "__main__":
     ras = DUTRAS()
     ras.InitClock("clock")
-    mlvp.setup_logging(log_level=mlvp.logger.INFO)
-    # mlvp.setup_logging(log_level=mlvp.logger.ERROR)
+    # mlvp.setup_logging(log_level=mlvp.logger.INFO)
+    mlvp.setup_logging(log_level=mlvp.logger.ERROR)
     mlvp.run(top_test(ras), ras)
     ras.Finish()
